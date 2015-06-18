@@ -3,6 +3,7 @@
 var SEPERATOR = '; ',
 	EQUALS = '=',
 	FOREVER = 'Fri, 31 Dec 9999 23:59:59 GMT',
+	PAST = 'Thu, 01 Jan 1970 00:00:01 GMT',
 
 	encode = encodeURIComponent,
 	decode = decodeURIComponent,
@@ -44,6 +45,12 @@ var SEPERATOR = '; ',
 		return expires;
 	},
 
+	/*
+		Build param fragment
+
+		@param [string]: Param name
+		@param [string]: Param value
+	*/
 	paramString = function (name, value) {
 		var param = SEPERATOR + name;
 
@@ -132,6 +139,8 @@ module.exports = {
 		@return: this
 	*/
 	remove: function (name) {
-		this.forever(name, '');
+		this.set(name, '', {
+			end: PAST
+		});
 	}
 };
