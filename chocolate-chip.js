@@ -2,9 +2,47 @@
 
 var SEPERATOR = '; ',
 	EQUALS = '=',
+	FOREVER = 'Fri, 31 Dec 9999 23:59:59 GMT',
 
 	encode = encodeURIComponent,
 	decode = decodeURIComponent,
+
+	/*
+		Get expires parameter
+
+		@param [string || number || Date]: 
+		@return [string]: Param fragment with date
+	*/
+	getExpiresParam = function (end) {
+		var expires = '';
+
+		switch (typeof end) {
+			case 'number':
+				// If this number is set to Infinity, set to arbitary time
+				if (end === Infinity) {
+					expires = paramString('expires', FOREVER);
+
+				// Or if it's in ms, set max-age
+				} else {
+					expires = paramString('max-age', end);
+				}
+				break;
+
+			// Assume this is a time string
+			case 'string':
+				expires = paramString('expires', end);
+				break;
+
+			// Assume this is a Date object
+			case 'object':
+				if (end.toUTCString) {
+					expires = paramString('expires', end.toUTCString());
+				}
+				break;
+		}
+
+		return expires;
+	},
 
 	paramString = function (name, value) {
 		var param = SEPERATOR + name;
@@ -28,6 +66,7 @@ module.exports = {
 		var allCookies = document.cookie.split(SEPERATOR),
 			numCookies = allCookies.length,
 			cookieKeyValue = [],
+			cookieValue = false,
 			i = 0;
 
 		for (; i < numCookies; i++) {
@@ -35,9 +74,11 @@ module.exports = {
 
 			// Check if cookie key is the same as provided name
 			if (decode(cookieKeyValue[0]) === name) {
-				return decode(cookieKeyValue[1]);
+				cookieValue = decode(cookieKeyValue[1]);
 			}
 		}
+
+		return cookieValue;
 	},
 
 	/*
@@ -54,42 +95,12 @@ module.exports = {
 		@return: this
 	*/
 	set: function (name, value, opts) {
-		var cookie = encode(name) + EQUALS + encode(value),
-			expires = '',
-			end;
+		var cookie = encode(name) + EQUALS + encode(value);
 
 		opts = opts || {};
-		end = opts.end;
-
-		if (end) {
-			switch (typeof end) {
-				case 'number':
-					// If this number is set to Infinity, set to arbitary time
-					if (end === Infinity) {
-						expires = paramString('expires', 'Fri, 31 Dec 9999 23:59:59 GMT');
-
-					// Or if it's in ms, set max-age
-					} else {
-						expires = paramString('max-age', end);
-					}
-					break;
-
-				// Assume this is a time string
-				case 'string':
-					expires = paramString('expires', end);
-					break;
-
-				// Assume this is a Date object
-				case 'object':
-					if (end.toUTCString) {
-						expires = paramString('expires', end.toUTCString());
-					}
-					break;
-			}
-		}
 
 		// Build cookie string
-		cookie += expires;
+		cookie += getExpiresParam(opts.end);
 		cookie += (opts.path) ? paramString('path', opts.path) : '';
 		cookie += (opts.domain) ? paramString('domain', opts.domain) : '';
 		cookie += (opts.secure) ? paramString('secure') : '';
@@ -106,6 +117,10 @@ module.exports = {
 		@return: this
 	*/
 	forever: function (name, value, opts) {
+		opts = opts || {};
+		opts.end = FOREVER;
+
+		this.set(name, value, opts);
 
 		return this;
 	},
@@ -116,16 +131,7 @@ module.exports = {
 		@param [string]: Name
 		@return: this
 	*/
-	remove: function (name) {},
-
-	/*
-		Is cookie set?
-
-		@param [string]: Name of cookie
-		@return [boolean]: true if cookie is set
-	*/
-	isSet: function (name) {
-
-
+	remove: function (name) {
+		this.forever(name, '');
 	}
 };

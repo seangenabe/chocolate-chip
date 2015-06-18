@@ -45,12 +45,6 @@ cookie.get('name');
 cookie.remove('name');
 ```
 
-### Check if cookie is set
-
-```javascript
-cookie.isSet('name'); // Returns true if cookie is set
-```
-
 ### Set cookie forever
 
 Shorthand for `cookie.set()`, sets `end` to `Infinity`.
