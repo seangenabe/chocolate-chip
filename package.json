@@ -1,0 +1,20 @@
+{
+  "name": "chocolate-chip",
+  "version": "0.0.1",
+  "description": "A tiny cookie toolkit.",
+  "author": "Matt Perry <admin@redshiftjs.com>",
+  "homepage": "http://redshiftjs.com",
+  "main": "chocolate-chip.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/InventingWithMonster/chocolate-chip"
+  },
+  "bugs": {
+    "url": "https://github.com/InventingWithMonster/chocolate-chip/issues"
+  },
+  "keywords": [
+    "cookie"
+  ],
+  "analyze": true,
+  "license": "MIT"
+}
