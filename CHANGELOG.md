@@ -2,6 +2,11 @@
 
 Chocolate Chip adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.0] 2016-09-20
+
+### Fixed
+- Allow opts on `remove` to allow removal of custom domain cookies.
+
 ## [0.0.3] 2015-06-18
 
 ### Changed

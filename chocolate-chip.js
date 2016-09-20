@@ -138,9 +138,12 @@ module.exports = {
         @param [string]: Name
         @return: this
     */
-    remove: function (name) {
+    remove: function (name, opts) {
         this.set(name, '', {
-            end: PAST
+            end: PAST,
+            path: (opts && opts.path) ? opts.path : undefined,
+            domain: (opts && opts.domain) ? opts.domain : undefined,
+            secure: (opts && opts.secure) ? opts.secure : undefined
         });
     }
 };
