@@ -42,7 +42,7 @@ cookie.get('name');
 ### Remove cookie
 
 ```javascript
-cookie.remove('name');
+cookie.remove('name'[, opts]);
 ```
 
 ### Set cookie forever
